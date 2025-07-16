@@ -6,7 +6,7 @@ const pokemonList = document.getElementById("pokemonList");
 
 function pokemonToLi(pokemon) {
     return `
-        <li class="pokemon ${pokemon.type}" onclick="window.location.href='/pokedex?pokemon=${pokemon.name}'">
+        <li class="pokemon ${pokemon.type}" onclick="window.open.href='/pokedex?pokemon=${pokemon.name}'">
             <span class="number">#${pokemon.number}</span>
             <span class="name">${pokemon.name}</span>
             <div class="detail">
