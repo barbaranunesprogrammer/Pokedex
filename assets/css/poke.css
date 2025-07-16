@@ -28,7 +28,7 @@ body {
   color: #000;
   margin: 0 0 0.3rem 0;
   font-weight: 700;
-  font-size: 1rem; /* menor fonte */
+  font-size: 2rem; /* menor fonte */
   text-align: center;
   text-transform: capitalize;
 }
