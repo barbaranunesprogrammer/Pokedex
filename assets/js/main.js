@@ -6,7 +6,7 @@ const pokemonList = document.getElementById("pokemonList");
 
 function pokemonToLi(pokemon) {
     return `
-        <li class="pokemon ${pokemon.type}" onclick="window.open.href='/pokedex?pokemon=${pokemon.name}'">
+        <li class="pokemon ${pokemon.type}" onclick="window.open('/pokedex?pokemon=${pokemon.name}', '_blank')">
             <span class="number">#${pokemon.number}</span>
             <span class="name">${pokemon.name}</span>
             <div class="detail">
@@ -17,6 +17,7 @@ function pokemonToLi(pokemon) {
             </div>
         </li>`;
 }
+
 
 function loadPokemonItens(offset, limit) {
     pokeApi.getPokemons(offset, limit).then((pokemons = []) => {
