@@ -8,7 +8,7 @@ const clearButton = document.querySelector(".btnClear");
 
 let offset = 0;
 const limit = 15;
-let MAX_POKEMONS = 0;
+let MAX_POKEMONS =1025;
 
 // Gera HTML de um Pokémon
 function pokemonToLi(pokemon) {
