@@ -11,8 +11,15 @@
     <link rel="stylesheet" href="assets/css/pokedex.css">
 </head>
 <body>
+    
+    </header>
     <section class="content">
         <h1><img class="img-logo" src="assets/img/pokedex.jpg" alt=""></h1>
+         <div class="search-container">
+    <input type="text" class="input" value="" placeholder="Digite o ID ou nome do pokemon">
+    <button class="btnSearch" type="button" onclick="getPokemon()">Pesquisar</button>
+    <button class="btnClear" type="button" onclick="clearSearch()">Limpar</button>
+</div>
         <ol id="pokemonList" class="pokemons"></ol>
         <div class="pagination">
           <button id="loadMoreButton" type="button">
