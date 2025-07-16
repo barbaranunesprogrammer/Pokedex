@@ -31,7 +31,7 @@ fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
 
     function botaoVoltar() {
        //quando eu clicar vai voltar para o index.html
-       window.location.href = "index.html";
+       window.location.href = "/";
     }
 
     button.addEventListener("click", botaoVoltar);
