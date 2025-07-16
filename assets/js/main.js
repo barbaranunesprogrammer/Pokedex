@@ -1,9 +1,13 @@
+// main.js otimizado com paginação e suporte a ID/nome na busca
+
 const loadMoreButton = document.getElementById("loadMoreButton");
 const pokemonList = document.getElementById("pokemonList");
 const searchInput = document.querySelector(".input");
+const searchButton = document.querySelector(".btnSearch");
+const clearButton = document.querySelector(".btnClear");
 
 let offset = 0;
-let limit = 5;
+const limit = 5;
 let MAX_POKEMONS = 0;
 
 // Gera HTML de um Pokémon
@@ -27,6 +31,10 @@ function loadPokemonItens(offset, limit) {
     pokeApi.getPokemons(offset, limit).then((pokemons = []) => {
         const newHtml = pokemons.map(pokemonToLi).join("");
         pokemonList.innerHTML += newHtml;
+
+        if ((offset + limit) >= MAX_POKEMONS) {
+            loadMoreButton.style.display = "none";
+        }
     });
 }
 
@@ -39,13 +47,17 @@ async function getPokemon() {
         return;
     }
 
-    const id = Number(query);
-    if (!isNaN(id) && (id < 1 || id > MAX_POKEMONS)) {
-        alert(`O ID deve ser entre 1 e ${MAX_POKEMONS}.`);
-        return;
+    let idOrName = query;
+    if (!isNaN(query)) {
+        const id = parseInt(query);
+        if (id < 1 || id > MAX_POKEMONS) {
+            alert(`O ID deve ser entre 1 e ${MAX_POKEMONS}.`);
+            return;
+        }
+        idOrName = id;
     }
 
-    const url = `https://pokeapi.co/api/v2/pokemon/${query}`;
+    const url = `https://pokeapi.co/api/v2/pokemon/${idOrName}`;
 
     try {
         const response = await fetch(url);
@@ -55,6 +67,7 @@ async function getPokemon() {
         const pokemon = convertPokeApiDetailToPokemon(data);
 
         pokemonList.innerHTML = pokemonToLi(pokemon);
+        loadMoreButton.style.display = "none";
     } catch (error) {
         alert("Pokémon não encontrado. Tente novamente.");
     }
@@ -65,6 +78,7 @@ function clearSearch() {
     searchInput.value = "";
     pokemonList.innerHTML = "";
     offset = 0;
+    loadMoreButton.style.display = "block";
     loadPokemonItens(offset, limit);
 }
 
@@ -75,15 +89,18 @@ searchInput.addEventListener("keypress", (event) => {
     }
 });
 
-// Inicializa: pega todos os Pokémon e define MAX_POKEMONS dinamicamente
-pokeApi.getPokemons(0, 10000).then((pokemons = []) => {
-    MAX_POKEMONS = pokemons.length;
-    limit = MAX_POKEMONS;
-    pokemonList.innerHTML = "";
-    loadPokemonItens(offset, limit);
-    loadMoreButton.style.display = "none"; // esconde botão se tudo já estiver carregado
-});
+// Inicializa com limite total
+fetch("https://pokeapi.co/api/v2/pokemon?limit=1")
+    .then(res => res.json())
+    .then(data => {
+        MAX_POKEMONS = data.count;
+        loadPokemonItens(offset, limit);
+    });
 
-// Botões
-document.querySelector(".btnSearch").addEventListener("click", getPokemon);
-document.querySelector(".btnClear").addEventListener("click", clearSearch);
+// Eventos de botão
+searchButton.addEventListener("click", getPokemon);
+clearButton.addEventListener("click", clearSearch);
+loadMoreButton.addEventListener("click", () => {
+    offset += limit;
+    loadPokemonItens(offset, limit);
+});
