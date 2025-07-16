@@ -3,7 +3,7 @@ const pokemonList = document.getElementById("pokemonList");
 const searchInput = document.querySelector(".input");
 
 let offset = 0;
-let limit = 10;
+let limit = 5;
 let MAX_POKEMONS = 0;
 
 // Gera HTML de um Pokémon
