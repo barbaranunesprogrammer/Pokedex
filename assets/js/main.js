@@ -7,7 +7,7 @@ const searchButton = document.querySelector(".btnSearch");
 const clearButton = document.querySelector(".btnClear");
 
 let offset = 0;
-const limit = 5;
+const limit = 15;
 let MAX_POKEMONS = 0;
 
 // Gera HTML de um Pokémon
