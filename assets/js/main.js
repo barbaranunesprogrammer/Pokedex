@@ -1,5 +1,3 @@
-// main.js otimizado com paginação e suporte a ID/nome na busca
-
 const loadMoreButton = document.getElementById("loadMoreButton");
 const pokemonList = document.getElementById("pokemonList");
 const searchInput = document.querySelector(".input");
@@ -8,7 +6,7 @@ const clearButton = document.querySelector(".btnClear");
 
 let offset = 0;
 const limit = 15;
-let MAX_POKEMONS =1025;
+const MAX_POKEMONS = 1025; // Valor fixo para a Pokédex nacional
 
 // Gera HTML de um Pokémon
 function pokemonToLi(pokemon) {
@@ -66,6 +64,11 @@ async function getPokemon() {
         const data = await response.json();
         const pokemon = convertPokeApiDetailToPokemon(data);
 
+        if (pokemon.number > MAX_POKEMONS) {
+            alert("Esse Pokémon não faz parte dos 1025 da Pokédex principal.");
+            return;
+        }
+
         pokemonList.innerHTML = pokemonToLi(pokemon);
         loadMoreButton.style.display = "none";
     } catch (error) {
@@ -89,13 +92,8 @@ searchInput.addEventListener("keypress", (event) => {
     }
 });
 
-// Inicializa com limite total
-fetch("https://pokeapi.co/api/v2/pokemon?limit=1")
-    .then(res => res.json())
-    .then(data => {
-        MAX_POKEMONS = data.count;
-        loadPokemonItens(offset, limit);
-    });
+// Inicializa a lista com os 1025 principais
+loadPokemonItens(offset, limit);
 
 // Eventos de botão
 searchButton.addEventListener("click", getPokemon);
