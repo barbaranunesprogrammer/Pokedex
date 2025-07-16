@@ -4,18 +4,8 @@ Este é um projeto de uma Pokédex simples, desenvolvido com HTML, CSS e JavaScr
 
 ## 📸 Screenshots
 
-<table>
-  <tr>
-    <td><img src="https://via.placeholder.com/400x300.png?text=Página+Principal" alt="Página Principal da Pokédex"></td>
-    <td><img src="https://via.placeholder.com/400x300.png?text=Página+de+Detalhes" alt="Página de Detalhes do Pokémon"></td>
-  </tr>
-  <tr>
-    <td align="center">Página Principal</td>
-    <td align="center">Página de Detalhes</td>
-  </tr>
-</table>
 
-**Observação:** Substitua as URLs das imagens acima por capturas de tela reais do seu projeto para uma melhor apresentação.
+
 
 ## ✨ Funcionalidades
 
