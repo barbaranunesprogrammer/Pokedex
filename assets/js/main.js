@@ -45,36 +45,64 @@ async function getPokemon() {
         return;
     }
 
-    let idOrName = query;
+    pokemonList.innerHTML = "";
+    loadMoreButton.style.display = "none";
+
+    // Se for um número, tenta buscar por ID
     if (!isNaN(query)) {
         const id = parseInt(query);
         if (id < 1 || id > MAX_POKEMONS) {
             alert(`O ID deve ser entre 1 e ${MAX_POKEMONS}.`);
             return;
         }
-        idOrName = id;
-    }
 
-    const url = `https://pokeapi.co/api/v2/pokemon/${idOrName}`;
-
-    try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Não encontrado");
-
-        const data = await response.json();
-        const pokemon = convertPokeApiDetailToPokemon(data);
-
-        if (pokemon.number > MAX_POKEMONS) {
-            alert("Esse Pokémon não faz parte dos 1025 da Pokédex principal.");
+        try {
+            const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            const pokemon = convertPokeApiDetailToPokemon(data);
+            pokemonList.innerHTML = pokemonToLi(pokemon);
+            return;
+        } catch {
+            alert("Pokémon não encontrado por ID.");
             return;
         }
+    }
 
-        pokemonList.innerHTML = pokemonToLi(pokemon);
-        loadMoreButton.style.display = "none";
-    } catch (error) {
-        alert("Pokémon não encontrado. Tente novamente.");
+    // Se não for número, tenta buscar como nome
+    try {
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`);
+        if (res.ok) {
+            const data = await res.json();
+            const pokemon = convertPokeApiDetailToPokemon(data);
+            pokemonList.innerHTML = pokemonToLi(pokemon);
+            return;
+        }
+    } catch {}
+
+    // Se não for nome, tenta buscar como tipo
+    try {
+        const res = await fetch(`https://pokeapi.co/api/v2/type/${query}`);
+        if (!res.ok) throw new Error("Tipo inválido");
+
+        const data = await res.json();
+
+        const pokemonPromises = data.pokemon
+            .slice(0, 30) // Limita a 30 Pokémon por tipo
+            .map(async (entry) => {
+                const res = await fetch(entry.pokemon.url);
+                const pokeData = await res.json();
+                return convertPokeApiDetailToPokemon(pokeData);
+            });
+
+        const pokemons = await Promise.all(pokemonPromises);
+        const html = pokemons.map(pokemonToLi).join("");
+        pokemonList.innerHTML = html;
+    } catch {
+        alert("Nenhum Pokémon, ID ou tipo encontrado.");
     }
 }
+
 
 // Botão limpar
 function clearSearch() {
